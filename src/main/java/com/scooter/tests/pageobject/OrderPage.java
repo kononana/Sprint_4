@@ -3,6 +3,10 @@ import org.openqa.selenium.By;
 import org.openqa.selenium.JavascriptExecutor;
 import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.WebElement;
+import org.openqa.selenium.support.ui.ExpectedConditions;
+import org.openqa.selenium.support.ui.WebDriverWait;
+
+import java.time.Duration;
 import java.util.List;
 
 public class OrderPage {
@@ -51,6 +55,7 @@ public class OrderPage {
         this.driver = driver;
     }
 
+
     //Заполнить поле с именем
     public void enterName(String name) {
         driver.findElement(inputName).clear();
@@ -69,6 +74,7 @@ public class OrderPage {
         driver.findElement(inputAddress).sendKeys(address);
     }
 
+
     //Выбрать станцию метро из выпадающего списка
     public void enterStation(int stationNumber) {
         driver.findElement(inputStation).click();
@@ -83,6 +89,11 @@ public class OrderPage {
         driver.findElement(inputPhoneNumber).sendKeys(phone);
     }
 
+
+    //Вернем кнопку поле для ввода телефона для проверки отображения формы заказа на странице
+    public WebElement getPhoneInput() {
+        return driver.findElement(inputPhoneNumber);
+    }
     //Кликнуть на кнопку "Далее"
     public void clickOnNextButton() {
         driver.findElement(buttonNext).click();

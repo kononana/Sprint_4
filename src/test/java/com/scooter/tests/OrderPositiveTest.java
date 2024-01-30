@@ -6,10 +6,12 @@ import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.junit.runners.Parameterized;
 import org.openqa.selenium.WebDriver;
+import org.openqa.selenium.WebElement;
 import org.openqa.selenium.chrome.ChromeDriver;
 import com.scooter.tests.pageobject.MainPage;
 import com.scooter.tests.pageobject.OrderPage;
 import static org.junit.Assert.assertTrue;
+import com.scooter.tests.pageobject.Constants;
 
 import java.time.Duration;
 
@@ -49,6 +51,7 @@ public class OrderPositiveTest{
     public static Object[][] getTestData() {
         return new Object[][]{
                 {"Павел", "Зотов", "Первый адрес", 25, "+77023456789", "04.06.24", 0,"серый", "Верхний этаж", 0},
+                {"Олег", "Долгих", "Главный адрес", 35, "+71223456700", "02.05.24", 2,"черный", "Коментарий новый", 0},
                 {"Леон", "Измайлов", "Иной адрес", 13, "+79223456789", "04.03.24", 2,"черный", "Нижний этаж", 1},
 
         };
@@ -57,8 +60,7 @@ public class OrderPositiveTest{
     @Before
     public void setUp() {
         driver = new ChromeDriver();
-
-        driver.get("https://qa-scooter.praktikum-services.ru/");
+        driver.get(Constants.URL);
         driver.manage().window().maximize();
     }
     //Проверка позитивного сценария по кнопкам "Заказать"
@@ -68,15 +70,20 @@ public class OrderPositiveTest{
         mainPage.clickGetCookie();
         if (indexButton == 0) {
             mainPage.clickOrderButtonTop();
+            OrderPage orderPage = new OrderPage(driver);
+            orderPage.fillOrderFormFirstPage(name, surname, address, stationIndex, phone);
+            orderPage.fillOrderFormSecondPage(date, duration, color, comment);
+            orderPage.clickConfirmOrderButton();
+            driver.manage().timeouts().implicitlyWait(Duration.ofSeconds(3));
+            MatcherAssert.assertThat(orderPage.getTextAboutOrderResult(), containsString("Заказ оформлен"));
         } else {
             mainPage.clickOrderButtonBottom();
+            OrderPage orderPage = new OrderPage(driver);
+            boolean addressInput = orderPage.getPhoneInput().isDisplayed();
+            assertTrue( "на странице нет поля для ввода номера телефона",addressInput);
+
         }
-        OrderPage orderPage = new OrderPage(driver);
-        orderPage.fillOrderFormFirstPage(name, surname, address, stationIndex, phone);
-        orderPage.fillOrderFormSecondPage(date, duration, color, comment);
-        orderPage.clickConfirmOrderButton();
-        driver.manage().timeouts().implicitlyWait(Duration.ofSeconds(3));
-        MatcherAssert.assertThat(orderPage.getTextAboutOrderResult(), containsString("Заказ оформлен"));
+
     }
 
     @After

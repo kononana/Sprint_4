@@ -1,4 +1,5 @@
 package com.scooter.tests;
+import com.scooter.tests.pageobject.Constants;
 import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
@@ -8,6 +9,8 @@ import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.WebElement;
 import org.openqa.selenium.chrome.ChromeDriver;
 import com.scooter.tests.pageobject.MainPage;
+import org.openqa.selenium.support.ui.WebDriverWait;
+
 import java.time.Duration;
 import static org.junit.Assert.assertEquals;
 
@@ -39,21 +42,20 @@ public class FaqTest {
     @Before
     public void setUp() {
         driver = new ChromeDriver();
-        driver.get("https://qa-scooter.praktikum-services.ru/");
+        driver.get(Constants.URL);
         driver.manage().window().maximize();
     }
 
     //Сравнение текста ответа, при нажатии на вопрос
     @Test
     public void checkAnswers() {
-
         MainPage mainPage = new MainPage(driver);
         mainPage.clickGetCookie();
         mainPage.scrollToQuestionList();
         WebElement faqItem =  mainPage.questionElements().get(index);
         faqItem.click();
-        WebElement answer =  mainPage.answerElements().get(index);
-        driver.manage().timeouts().implicitlyWait(Duration.ofSeconds(2));
+        WebElement answerList =  mainPage.answerElements().get(index);
+        WebElement answer = mainPage.waitForElementToBeVisible(answerList);
         assertEquals("Текст ответа не совпадает с ожидаемым",
                 expectedText,answer.getText());
     }

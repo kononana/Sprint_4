@@ -3,6 +3,10 @@ import org.openqa.selenium.By;
 import org.openqa.selenium.JavascriptExecutor;
 import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.WebElement;
+import org.openqa.selenium.support.ui.ExpectedConditions;
+import org.openqa.selenium.support.ui.WebDriverWait;
+
+import java.time.Duration;
 import java.util.List;
 
 public class MainPage {
@@ -10,6 +14,7 @@ public class MainPage {
     public MainPage(WebDriver driver) {
         this.driver = driver;
     }
+
     // кнопка куки
     private final By buttonAcceptCookie = By.id("rcc-confirm-button");
     //Секция с вопросами
@@ -46,7 +51,6 @@ public class MainPage {
         driver.findElement(orderButtonTop).click();
     }
 
-
     //Нажать на кнопку внизу страницы
     public void clickOrderButtonBottom() {
         WebElement element = driver.findElement(orderButtonBottom);
@@ -57,6 +61,12 @@ public class MainPage {
     // принять куки
     public void clickGetCookie() {
             driver.findElement(buttonAcceptCookie).click();
+    }
+
+    //Явное ожидание элемента на странице
+    public WebElement waitForElementToBeVisible(WebElement element) {
+        WebDriverWait wait = new WebDriverWait(driver, Duration.ofSeconds(5));
+        return wait.until(ExpectedConditions.visibilityOf(element));
     }
 
 
